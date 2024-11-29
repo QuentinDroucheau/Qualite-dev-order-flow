@@ -12,6 +12,9 @@ import org.ormi.priv.tfa.orderflow.lib.publishedlanguage.event.ProductRegistryEv
 import org.ormi.priv.tfa.orderflow.lib.publishedlanguage.event.ProductRemoved;
 import org.ormi.priv.tfa.orderflow.lib.publishedlanguage.event.ProductUpdated;
 import org.ormi.priv.tfa.orderflow.lib.publishedlanguage.event.config.ProductRegistryEventChannelName;
+import org.ormi.priv.tfa.orderflow.product.registry.service.producer.exception.EventProduceException;
+import org.ormi.priv.tfa.orderflow.product.registry.service.producer.exception.ProducerCloseException;
+import org.ormi.priv.tfa.orderflow.product.registry.service.producer.exception.ProducerCreateException;
 
 import io.quarkus.logging.Log;
 import io.smallrye.reactive.messaging.pulsar.PulsarClientService;
@@ -106,13 +109,13 @@ public class ProductRegistryEventEmitter {
               .sendAsync()
               .whenComplete((msgId, ex) -> {
                 if (ex != null) {
-                  throw new RuntimeException("Failed to produce event for correlation id: " + correlationId, ex);
+                  throw new EventProduceException("Failed to produce event for correlation id: " + correlationId, ex);
                 }
                 Log.debug(String.format("Sinked event with correlation id{%s} in msg{%s}", correlationId, msgId));
                 try {
                   producer.close();
                 } catch (PulsarClientException e) {
-                  throw new RuntimeException("Failed to close producer", e);
+                  throw new ProducerCloseException("Failed to close producer", e);
                 }
               });
         });
@@ -135,7 +138,7 @@ public class ProductRegistryEventEmitter {
         .topic(topic)
         .createAsync()
         .exceptionally(ex -> {
-          throw new RuntimeException("Failed to create producer for correlation id: " + correlationId, ex);
+          throw new ProducerCreateException("Failed to create producer for correlation id: " + correlationId, ex);
         });
   }
 }
