@@ -42,6 +42,7 @@ public class ProductRegistryEventEmitter {
    * Project the event.
    * 
    * @param event - the event to project
+   * @return void
    */
   public void emit(ProductRegistryEvent event) throws IllegalStateException {
     Log.debug("Projecting event: " + event.toString());
@@ -58,6 +59,8 @@ public class ProductRegistryEventEmitter {
    * Emit a product registered event.
    * 
    * @param registered - the event to emit
+   * @throws IllegalStateException
+   * @return void
    */
   void emitRegisteredProduct(ProductRegistered registered) throws IllegalStateException {
     eventEmitter.send(registered);
@@ -67,6 +70,8 @@ public class ProductRegistryEventEmitter {
    * Emit a product updated event.
    * 
    * @param updated - the event to emit
+   * @throws IllegalStateException
+   * @return void
    */
   void projectUpdatedProduct(ProductUpdated updated) throws IllegalStateException {
     eventEmitter.send(updated);
@@ -76,6 +81,8 @@ public class ProductRegistryEventEmitter {
    * Emit a product removed event.
    * 
    * @param removed - the event to project
+   * @throws IllegalStateException
+   * @return void
    */
   void emitRemovedProduct(ProductRemoved removed) throws IllegalStateException {
     eventEmitter.send(removed);
@@ -86,6 +93,7 @@ public class ProductRegistryEventEmitter {
    * 
    * @param correlationId - the correlation id
    * @param event         - the event
+   * @return void
    */
   public void sink(String correlationId, ProductRegistryEvent event) {
     // Get the producer for the correlation id

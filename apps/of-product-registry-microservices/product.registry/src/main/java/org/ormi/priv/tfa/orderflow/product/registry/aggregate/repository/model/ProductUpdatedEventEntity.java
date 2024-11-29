@@ -28,6 +28,9 @@ public class ProductUpdatedEventEntity extends ProductRegistryEventEntity {
 
 
   @Override
+  /**
+   * @return The event type
+   */
   public String getEventType() {
     return EVENT_TYPE;
   }

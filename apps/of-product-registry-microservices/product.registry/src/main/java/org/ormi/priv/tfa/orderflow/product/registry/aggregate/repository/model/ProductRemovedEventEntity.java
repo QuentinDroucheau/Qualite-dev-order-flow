@@ -19,6 +19,9 @@ public class ProductRemovedEventEntity extends ProductRegistryEventEntity {
   public Payload payload;
 
   @Override
+  /**
+   * @return The event type
+   */
   public String getEventType() {
     return EVENT_TYPE;
   }

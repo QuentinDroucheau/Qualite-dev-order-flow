@@ -49,7 +49,7 @@ public class ProductRegistryService {
    * 
    * This method will load all events from the event store and apply them to the
    * product registry starting from the last known version.
-   * 
+   * @param registry
    * @return The product registry.
    */
   public ProductRegistry loadProductRegistry(ProductRegistry registry) {

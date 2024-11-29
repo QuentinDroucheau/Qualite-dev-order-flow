@@ -16,11 +16,22 @@ public class ProductRegistryEventRepository
     PanacheMongoRepository<ProductRegistryEventEntity> {
 
   @Override
+  /**
+   * Save the event
+   * @param ProductRegistryEventEntity event
+   * @return void
+   */
   public void saveEvent(ProductRegistryEventEntity event) {
     persist(event);
   }
 
   @Override
+  /**
+   * Find the events by aggregate root id and starting version
+   * @param aggregateRootId
+   * @param startingVersion
+   * @return the events by aggregate root id and starting version
+   */
   public List<ProductRegistryEventEntity> findEventsByAggregateRootIdAndStartingVersion(String aggregateRootId,
       long startingVersion) {
     return find(

@@ -41,6 +41,7 @@ public class ProductRegistry {
 
   /**
    * Default constructor.
+   * @param productRegistryService The product registry service
    */
   public ProductRegistry(ProductRegistryService productRegistryService) {
     this.productRegistryService = productRegistryService;
@@ -86,6 +87,7 @@ public class ProductRegistry {
    * Thread safe. Should not persist any state changes.
    * 
    * @param event the event to apply
+   * @return void
    */
   public void apply(ProductRegistryEvent event) {
     Log.debug("Applying event: " + event.getClass().getName());

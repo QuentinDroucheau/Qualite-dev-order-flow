@@ -60,6 +60,9 @@ public class Product {
   }
 
   @Override
+  /**
+   * @return String representation of the product
+   */
   public String toString() {
     return "Product{" +
       "productId=" + productId +
@@ -69,6 +72,11 @@ public class Product {
   }
 
   @Override
+  /**
+   * Check if two products are equal
+   * @param o The other product
+   * @return True if the products are equal
+   */
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof Product)) return false;
@@ -78,6 +86,9 @@ public class Product {
   }
 
   @Override
+  /**
+   * @return Hash code of the product
+   */
   public int hashCode() {
     return productId.hashCode();
   }
