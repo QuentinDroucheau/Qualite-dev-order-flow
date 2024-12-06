@@ -12,7 +12,7 @@ public class ProductRegisteredEventEntity extends ProductRegistryEventEntity {
   /**
    * The payload for the event.
    */
-  public Payload payload;
+  private Payload payload;
 
   @Override
   /**
@@ -20,5 +20,12 @@ public class ProductRegisteredEventEntity extends ProductRegistryEventEntity {
    */
   public String getEventType() {
     return EVENT_TYPE;
+  }
+
+  /**
+   * @return The payload for the event.
+   */
+  public Payload getPayload() {
+    return payload;
   }
 }

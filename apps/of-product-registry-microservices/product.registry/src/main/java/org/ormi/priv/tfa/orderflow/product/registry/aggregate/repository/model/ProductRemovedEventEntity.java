@@ -12,7 +12,7 @@ public class ProductRemovedEventEntity extends ProductRegistryEventEntity {
   /**
    * The payload for the event.
    */
-  public Payload payload;
+  private Payload payload;
 
   @Override
   /**
@@ -22,4 +22,10 @@ public class ProductRemovedEventEntity extends ProductRegistryEventEntity {
     return EVENT_TYPE;
   }
   
+  /**
+   * @return The payload for the event.
+   */
+  public Payload getPayload() {
+    return payload;
+  }
 }

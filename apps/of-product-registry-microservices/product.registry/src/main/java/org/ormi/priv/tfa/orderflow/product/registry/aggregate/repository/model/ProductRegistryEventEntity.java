@@ -10,35 +10,70 @@ public abstract class ProductRegistryEventEntity {
   /**
    * The id of the Object.
    */
-	public ObjectId id;
+	private ObjectId id;
 
   /**
    * The id of the event.
    */
-  public String eventId;
+  private String eventId;
 
   /**
    * The type of the event.
    */
-  public String eventType = getEventType();
+  private String eventType = getEventType();
 
   /**
    * The id of the aggregate root.
    */
-  public String aggregateRootId;
+  private String aggregateRootId;
 
   /**
    * The version of the event.
    */
-  public long version;
+  private long version;
 
   /**
    * The timestamp of the event.
    */
-  public long timestamp;
+  private long timestamp;
 
   /**
    * @return The event type.
    */
   abstract String getEventType();
+
+  /**
+   * @return The version of the event.
+   */
+  public long getVersion(){
+    return version;
+  }
+
+  /**
+   * @return The timestamp of the event.
+   */
+  public long timestamp(){
+    return timestamp;
+  }
+
+  /**
+   * @return The id of the Object.
+   */
+  public ObjectId getId(){
+    return id;
+  }
+
+  /**
+   * @return The id of the event.
+   */
+  public String getEventId(){
+    return eventId;
+  }
+
+  /**
+   * @return The id of the aggregate root.
+   */
+  public String getAgregrateRootId(){
+    return aggregateRootId;
+  }
 }
