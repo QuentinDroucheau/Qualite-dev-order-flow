@@ -35,8 +35,15 @@ Pour contribuer, il faut suivre les étapes suivantes :
 
 ### Responsabilités des équipes
 
-Equipe 1 : Application API Gateway
-Equipe 2 : Application Product Registry Microservices
+Dans un contexte standard, les équipes serraient :
+
+Équipe 1 : Application API Gateway
+Équipe 2 : Application Product Registry Microservices
+
+Mais dans le contexte du TP, les équipes seront faites de la manière suivante :
+
+Équipe 1 : Tâches 1, 3, 5bis
+Équipe 2 : Tâches 2, 2bis, 4, 5, 6
 
 ### Suivi des tâches
 
