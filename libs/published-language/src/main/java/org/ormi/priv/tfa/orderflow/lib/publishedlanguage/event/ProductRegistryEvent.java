@@ -18,3 +18,4 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 })
 public sealed interface ProductRegistryEvent permits ProductRegistered, ProductRemoved, ProductUpdated {
 }
+
