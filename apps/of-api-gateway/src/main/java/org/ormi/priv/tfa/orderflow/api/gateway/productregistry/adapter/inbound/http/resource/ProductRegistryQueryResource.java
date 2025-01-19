@@ -51,6 +51,9 @@ public class ProductRegistryQueryResource {
   @Channel("product-registry-query")
   Emitter<ProductRegistryQuery> queryEmitter;
 
+  @ConfigProperty(timeout = "api-gateway.timeout") 
+  int timeout;
+
   /**
    * Get the product by id.
    * 
@@ -63,7 +66,6 @@ public class ProductRegistryQueryResource {
     // Create the query to get the product by id
     final GetProductById getProductById = new GetProductById(ProductId.of(productId));
     final String correlationId = java.util.UUID.randomUUID().toString();
-    final int timeout = 10000;
     // Send the query to the product registry
     queryEmitter.send(
         PulsarOutgoingMessage.from(Message.of(getProductById))
@@ -116,7 +118,6 @@ public class ProductRegistryQueryResource {
     // Create the query to get all the products
     final GetProducts getProducts = new GetProducts();
     final String correlationId = java.util.UUID.randomUUID().toString();
-    final int timeout = 10000;
     // Send the query to the product registry
     queryEmitter.send(
         PulsarOutgoingMessage.from(Message.of(getProducts))
