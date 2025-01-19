@@ -19,6 +19,14 @@ public class ProductRegistryEventConsumer {
   public void handleEvent(ProductRegistryEvent event) {
     // Project the event
     projector.handleEvent(event);
-    // TODO: Sink the event here once or while projection is processed
+    // Sink the event here once or while projection is processed
+    String correlationId = generateCorrelationId(event);
+    eventProducer.sink(correlationId, event);
+  }
+
+  // Method to generate or retrieve a correlation ID
+  private String generateCorrelationId(ProductRegistryEvent event) {
+    // Implement your logic to generate or retrieve a correlation ID
+    return "correlation-id";  // Replace with actual implementation
   }
 }

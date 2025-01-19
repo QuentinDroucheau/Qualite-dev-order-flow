@@ -103,21 +103,22 @@ public class ProductRegistryEventEmitter {
     getEventSinkByCorrelationId(correlationId)
         .thenAccept((producer) -> {
           // Sink the event
-          producer
-              .newMessage()
-              .value(event)
-              .sendAsync()
-              .whenComplete((msgId, ex) -> {
-                if (ex != null) {
-                  throw new EventProduceException("Failed to produce event for correlation id: " + correlationId, ex);
-                }
-                Log.debug(String.format("Sinked event with correlation id{%s} in msg{%s}", correlationId, msgId));
-                try {
-                  producer.close();
-                } catch (PulsarClientException e) {
-                  throw new ProducerCloseException("Failed to close producer", e);
-                }
-              });
+            producer
+                .newMessage()
+                .value(event)
+                .property("correlationId", correlationId)
+                .sendAsync()
+                .whenComplete((msgId, ex) -> {
+                    if (ex != null) {
+                        throw new EventProduceException("Failed to produce event for correlation id: " + correlationId, ex);
+                    }
+                    Log.debug(String.format("Sinked event with correlation id{%s} in msg{%s}", correlationId, msgId));
+                    try {
+                        producer.close();
+                    } catch (PulsarClientException e) {
+                        throw new ProducerCloseException("Failed to close producer", e);
+                    }
+                });
         });
   }
 
