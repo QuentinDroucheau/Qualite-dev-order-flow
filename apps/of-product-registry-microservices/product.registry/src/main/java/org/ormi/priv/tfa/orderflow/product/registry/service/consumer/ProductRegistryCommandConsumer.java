@@ -7,8 +7,10 @@ import java.util.concurrent.CompletionStage;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;
 import org.ormi.priv.tfa.orderflow.lib.publishedlanguage.command.ProductRegistryCommand;
+import org.ormi.priv.tfa.orderflow.lib.publishedlanguage.event.ProductRegistryEvent;
 import org.ormi.priv.tfa.orderflow.product.registry.aggregate.ProductRegistry;
 import org.ormi.priv.tfa.orderflow.product.registry.aggregate.service.ProductRegistryService;
+import org.ormi.priv.tfa.orderflow.product.registry.read.service.ProductRegistryEventConsumer;
 import org.ormi.priv.tfa.orderflow.product.registry.service.producer.ProductRegistryEventEmitter;
 
 import io.quarkus.logging.Log;
@@ -25,6 +27,9 @@ public class ProductRegistryCommandConsumer {
 
   @Inject
   private ProductRegistryEventEmitter eventProducer;
+
+  @Inject
+  private ProductRegistryEventConsumer eventConsumer;
 
   /**
    * The cached product registry.
@@ -71,7 +76,8 @@ public class ProductRegistryCommandConsumer {
         .subscribeAsCompletionStage()
         .thenAccept(evt -> {
           // Produce event on correlated bus
-          eventProducer.sink(correlationId, evt);
+          //eventProducer.sink(correlationId, evt);
+          eventConsumer.handleEvent(evt);
           Log.debug(String.format("Acknowledge command: %s", cmd.getClass().getName()));
           msg.ack();
         }).exceptionallyCompose(e -> {
