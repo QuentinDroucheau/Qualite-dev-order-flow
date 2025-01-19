@@ -48,6 +48,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 
+import org.ormi.priv.tfa.orderflow.lib.shared.ConsumeEmitEvent;
+
 @Path("/product/registry")
 public class ProductRegistryCommandResource {
 
@@ -63,6 +65,9 @@ public class ProductRegistryCommandResource {
   @Inject
   @Channel("product-registry-command")
   Emitter<ProductRegistryCommand> commandEmitter;
+
+  @ConfigProperty(timeout = "api-gateway.timeout") 
+  int timeout;
 
   /**
    * Endpoint to register a product.
@@ -115,36 +120,11 @@ public class ProductRegistryCommandResource {
       });
       // Consume events and emit DTOs
       CompletableFuture.runAsync(() -> {
-        while(!em.isCancelled()) {
-          try {
-            final var timeout = 10000;
-            final var msg = Optional.ofNullable(consumer.receive(timeout, TimeUnit.MILLISECONDS));
-            if (msg.isEmpty()) {
-              // Complete the emitter if no event is received within the timeout. Free up resources.
-              Log.debug("No event received within timeout of " + timeout + " seconds.");
-              em.complete();
-            }
-            final ProductRegistryEvent evt = msg.get().getValue();
-            Log.debug("Received event: " + evt);
-            // Map event to DTO
-            if (evt instanceof ProductRegistered registered) {
-              Log.debug("Emitting DTO for registered event: " + registered);
-              // Emit DTO for registered event
-              em.emit(ProductRegistryEventDtoMapper.INSTANCE.toDto(registered));
-            } else {
-              // Fail the stream on unexpected event types
-              Throwable error = new ProductRegistryEventStreamException("Unexpected event type: " + evt.getClass().getName());
-              em.fail(error);
-              return;
-            }
-            // Acknowledge the message
-            consumer.acknowledge(msg.get());
-          } catch (PulsarClientException e) {
-            Log.error("Failed to receive event from consumer.", e);
-            em.fail(e);
-            return;
-          }
-        }
+        ConsumeEmitEvent.consumeAndEmit(
+          consumer,
+          em,
+          ProductRegistered.INSTANCE
+        );
       });
     });
   }
@@ -200,36 +180,11 @@ public class ProductRegistryCommandResource {
       });
       // Consume events and emit DTOs
       CompletableFuture.runAsync(() -> {
-        while(!em.isCancelled()) {
-          try {
-            final var timeout = 10000;
-            final var msg = Optional.ofNullable(consumer.receive(timeout, TimeUnit.MILLISECONDS));
-            if (msg.isEmpty()) {
-              // Complete the emitter if no event is received within the timeout. Free up resources.
-              Log.debug("No event received within timeout of " + timeout + " seconds.");
-              em.complete();
-            }
-            final ProductRegistryEvent evt = msg.get().getValue();
-            Log.debug("Received event: " + evt);
-            // Map event to DTO
-            if (evt instanceof ProductUpdated updated) {
-              Log.debug("Emitting DTO for updated event: " + updated);
-              // Emit DTO for updated event
-              em.emit(ProductRegistryEventDtoMapper.INSTANCE.toDto(updated));
-            } else {
-              // Fail the stream on unexpected event types
-              Throwable error = new ProductRegistryEventStreamException("Unexpected event type: " + evt.getClass().getName());
-              em.fail(error);
-              return;
-            }
-            // Acknowledge the message
-            consumer.acknowledge(msg.get());
-          } catch (PulsarClientException e) {
-            Log.error("Failed to receive event from consumer.", e);
-            em.fail(e);
-            return;
-          }
-        }
+        ConsumeEmitEvent.consumeAndEmit(
+          consumer,
+          em,
+          ProductUpdated.INSTANCE
+        );
       });
     });
   }
@@ -279,36 +234,11 @@ public class ProductRegistryCommandResource {
       });
       // Consume events and emit DTOs
       CompletableFuture.runAsync(() -> {
-        while(!em.isCancelled()) {
-          try {
-            final var timeout = 10000;
-            final var msg = Optional.ofNullable(consumer.receive(timeout, TimeUnit.MILLISECONDS));
-            if (msg.isEmpty()) {
-              // Complete the emitter if no event is received within the timeout. Free up resources.
-              Log.debug("No event received within timeout of " + timeout + " seconds.");
-              em.complete();
-            }
-            final ProductRegistryEvent evt = msg.get().getValue();
-            Log.debug("Received event: " + evt);
-            // Map event to DTO
-            if (evt instanceof ProductRemoved removed) {
-              Log.debug("Emitting DTO for removed event: " + removed);
-              // Emit DTO for removed event
-              em.emit(ProductRegistryEventDtoMapper.INSTANCE.toDto(removed));
-            } else {
-              // Fail the stream on unexpected event types
-              Throwable error = new ProductRegistryEventStreamException("Unexpected event type: " + evt.getClass().getName());
-              em.fail(error);
-              return;
-            }
-            // Acknowledge the message
-            consumer.acknowledge(msg.get());
-          } catch (PulsarClientException e) {
-            Log.error("Failed to receive event from consumer.", e);
-            em.fail(e);
-            return;
-          }
-        }
+        ConsumeEmitEvent.consumeAndEmit(
+          consumer,
+          em,
+          ProductRemoved.INSTANCE
+        );
       });
     });
   }
