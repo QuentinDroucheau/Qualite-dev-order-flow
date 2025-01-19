@@ -255,17 +255,18 @@ public class ProductRegistryCommandResource {
    */
   private Consumer<ProductRegistryEvent> getEventsConsumerByCorrelationId(String correlationId) {
     try {
-      // Define the channel name, topic and schema for the consumer
-      final String channelName = ProductRegistryEventChannelName.PRODUCT_REGISTRY_EVENT.toString();
-      final String topic = channelName + "-" + correlationId;
-      // Create and return the subscription (consumer)
-      return pulsarClients.getClient(channelName)
-          .newConsumer(Schema.JSON(ProductRegistryEvent.class))
-          .subscriptionName(topic)
-          .topic(topic)
-          .subscribe();
+        // Define the channel name for the read side
+        final String channelName = ProductRegistryReadSideChannelName.PRODUCT_REGISTRY_READ_EVENT.toString();
+        final String topic = channelName + "-" + correlationId;
+
+        // Create and return the subscription (consumer) for the read side
+        return pulsarClients.getClient(channelName)
+            .newConsumer(Schema.JSON(ProductRegistryEvent.class))
+            .subscriptionName("read-side-subscription-" + correlationId)
+            .topic(topic)
+            .subscribe();
     } catch (PulsarClientException e) {
-      throw new RuntimeException("Failed to create consumer for product registry events.", e);
+        throw new RuntimeException("Failed to create consumer for product registry read-side events.", e);
     }
   }
 }
